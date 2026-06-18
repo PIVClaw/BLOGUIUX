@@ -1,0 +1,118 @@
+---
+title: "Organiser code, data et services proprement dans un homelab"
+description: "Le principe simple qui a rendu mon setup Jarvis beaucoup plus clair : séparer le code, les données persistantes et les services au lieu de tout mélanger."
+date: "2026-05-24"
+tags:
+  - homelab
+  - infrastructure
+  - docker
+  - architecture
+published: true
+---
+
+Une grande partie de la qualité d’un homelab ne dépend pas des outils choisis, mais de la manière dont on range les choses. Dit autrement : une mauvaise organisation de dossiers finit presque toujours par devenir une dette technique.
+
+Dans mon setup Jarvis sur Raspberry Pi 5, le vrai déclic a été de clarifier trois zones distinctes : le code, les données et les services.
+
+## Le problème classique
+
+Au début d’un projet perso, on a vite fait de tout laisser au même endroit :
+
+- des compose files dans un coin,
+- des volumes Docker dans un autre,
+- des bases de données mélangées avec des repos,
+- des chemins historiques qu’on n’ose plus toucher.
+
+Ça fonctionne… jusqu’au moment où il faut déboguer, migrer, sauvegarder ou simplement comprendre ce qui se passe vraiment.
+
+## La séparation qui change tout
+
+La structure qui s’est imposée chez moi est très simple :
+
+- `/srv/docker/...` pour les repos et stacks,
+- `/srv/data/...` pour les données persistantes.
+
+Ce choix a plusieurs avantages immédiats :
+
+- les sauvegardes deviennent plus simples,
+- les montages de volumes sont plus lisibles,
+- les repos restent propres,
+- et on identifie plus vite ce qui relève du code ou de l’état runtime.
+
+## Dans le cas de Jarvis
+
+Concrètement, cela donne quelque chose comme :
+
+- `/srv/docker/jarvis/core`
+- `/srv/docker/memory-worker`
+- `/srv/docker/qdrant`
+
+pour les stacks et le code,
+
+et :
+
+- `/srv/data/ai/jarvis`
+- `/srv/data/ai/qdrant`
+- `/srv/data/ai/memory/obsidian-vault`
+
+pour les données.
+
+Le simple fait de pouvoir lire cette carte et comprendre immédiatement les responsabilités de chaque dossier apporte déjà énormément.
+
+## Pourquoi cette séparation est importante
+
+Quand on fait tourner plusieurs composants, on a besoin de répondre vite à quelques questions simples :
+
+- où est le code source ?
+- où est la base ?
+- où sont les volumes montés ?
+- où partent les logs ?
+- qu’est-ce qui doit être sauvegardé ?
+
+Si ces réponses ne sont pas évidentes, le système devient fragile.
+
+## Le cas du memory-worker
+
+Le worker mémoire est un bon exemple. Sans structure claire, on peut très facilement croire qu’un service lit un dossier alors qu’il en monte un autre, ou qu’un conteneur exécute une logique alors qu’il lance en réalité un simple script de bootstrap.
+
+C’est exactement le genre de confusion qu’on veut éviter dans un homelab destiné à durer.
+
+## Les chemins doivent raconter une histoire claire
+
+Un bon chemin doit presque se suffire à lui-même.
+
+Par exemple :
+
+- `/srv/data/ai/qdrant`
+- `/srv/data/ai/jarvis/data/jarvis.db`
+- `/srv/data/ai/memory/obsidian-vault`
+
+Quand on voit ces chemins, on comprend immédiatement ce qu’ils contiennent et à quoi ils servent. C’est un détail, mais c’est ce genre de détail qui réduit fortement la friction opérationnelle.
+
+## L’intérêt pour les backups et migrations
+
+Cette organisation simplifie aussi énormément les sauvegardes.
+
+En pratique, on sait déjà que les dossiers critiques sont côté `/srv/data`. Si demain je veux migrer le code, refaire des conteneurs ou nettoyer un repo, je peux le faire sans toucher aux données persistantes.
+
+Et si je dois déplacer la stack ailleurs, je sais exactement quelles zones emporter.
+
+## Une règle simple
+
+Si un dossier contient quelque chose de recréable depuis Git, il doit plutôt vivre côté code. Si un dossier contient quelque chose qu’on ne veut surtout pas perdre, il doit vivre côté data.
+
+Cette règle n’est pas parfaite, mais elle suffit à éviter beaucoup d’erreurs.
+
+## Conclusion
+
+Un homelab propre n’a pas besoin d’être compliqué. Il a surtout besoin d’être lisible.
+
+Séparer :
+
+- le code,
+- les services,
+- les données persistantes,
+
+est probablement la décision d’infrastructure la plus rentable que j’ai prise sur ce setup Jarvis.
+
+Ce n’est pas la partie la plus spectaculaire du projet, mais c’est celle qui rend toutes les autres plus faciles.

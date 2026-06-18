@@ -1,0 +1,97 @@
+---
+title: "Brancher Obsidian, Qdrant et Samba dans un workflow cohérent"
+description: "Comment j’ai aligné le vault Obsidian, l’indexation Qdrant et l’accès réseau via Samba pour obtenir une mémoire utilisable au quotidien."
+date: "2026-05-24"
+tags:
+  - obsidian
+  - qdrant
+  - samba
+  - workflow
+  - jarvis
+published: true
+---
+
+Avoir un vault, un moteur vectoriel et un partage réseau séparés ne suffit pas. Tant que ces trois éléments ne pointent pas vers la même réalité, on obtient surtout de la confusion.
+
+C’est exactement ce qui arrive quand un système semble bien configuré sur le papier, mais qu’en pratique chaque brique regarde un chemin différent.
+
+## Le besoin réel
+
+Dans mon cas, je voulais une chose très simple :
+
+- écrire ou consulter mes notes dans un vrai vault Obsidian,
+- laisser le pipeline mémoire les ingérer dans Qdrant,
+- et pouvoir accéder au même vault facilement via Samba.
+
+En théorie, rien de compliqué. En pratique, il faut que tout le monde parle du même dossier.
+
+## Le point de friction
+
+Le problème est apparu quand j’ai commencé à vérifier les montages et les compose files. Le worker mémoire lisait encore un ancien chemin, alors que le vault cible que je voulais utiliser était :
+
+`/srv/data/ai/memory/obsidian-vault`
+
+Même chose pour Samba : le partage `[Obsidian]` existait bien, mais pointait encore vers l’ancien dossier.
+
+Autrement dit, j’avais :
+
+- un “bon” vault,
+- un service d’ingestion qui regardait ailleurs,
+- et un accès réseau qui exposait encore l’ancien emplacement.
+
+## Ce qu’il fallait réaligner
+
+Pour obtenir un workflow cohérent, il a fallu aligner trois choses :
+
+### 1. Le mount du memory-worker
+Le conteneur devait monter le bon vault, en lecture seule :
+
+- source : `/srv/data/ai/memory/obsidian-vault`
+- destination : `/srv/data/ai/memory/obsidian-vault`
+
+### 2. Le chemin utilisé par l’ingestion
+Le script d’ingestion devait lui aussi cibler ce même chemin, et non plus un ancien dossier historique.
+
+### 3. Le partage Samba
+Le partage `[Obsidian]` devait exposer le bon vault pour que l’accès réseau corresponde exactement à la source réellement ingérée.
+
+## Pourquoi Samba compte autant ici
+
+On a souvent tendance à considérer Samba comme un simple détail de confort. En réalité, dans ce type de setup, c’est une brique d’usage importante.
+
+Si le partage pointe vers le mauvais dossier, on croit éditer le vault principal alors qu’on modifie un emplacement que le système n’ingère pas. C’est le meilleur moyen d’avoir une mémoire incohérente sans s’en rendre compte immédiatement.
+
+## Le test de vérité
+
+Une fois les chemins corrigés, le seul test qui compte vraiment est un test de bout en bout :
+
+- créer un fichier Markdown dans le vault,
+- vérifier que le worker le voit,
+- vérifier qu’il le chunk,
+- puis vérifier que Qdrant reçoit bien les nouveaux points.
+
+C’est exactement ce test qui permet de passer d’une “config qui a l’air bonne” à une chaîne réellement fonctionnelle.
+
+## Pourquoi j’aime ce genre de vérification
+
+Ce type de validation évite les faux positifs. Un service peut être “Up”, un conteneur peut tourner, une collection peut exister, et malgré tout l’usage réel rester cassé.
+
+Le test le plus utile n’est pas “est-ce que le container démarre ?”, mais plutôt :
+
+- est-ce qu’un fichier que je dépose dans le vault se retrouve vraiment exploitable côté mémoire ?
+
+## Le bénéfice concret
+
+Une fois tout aligné, le setup devient beaucoup plus agréable :
+
+- j’écris dans un seul vault,
+- je le consulte via Samba si besoin,
+- et je sais que ce même contenu peut être ingéré dans Qdrant.
+
+Autrement dit, je n’ai plus trois systèmes parallèles. J’ai une seule source documentaire, plusieurs modes d’accès, et un pipeline cohérent.
+
+## Conclusion
+
+Ce genre de correction paraît mineure, mais elle change tout dans l’usage quotidien. L’objectif n’était pas seulement de faire tourner Qdrant ou d’exposer un dossier sur le réseau. L’objectif était de rendre la mémoire réellement praticable.
+
+Quand Obsidian, Qdrant et Samba pointent enfin vers le même vault, on commence à avoir un système qui ressemble à quelque chose de fiable.

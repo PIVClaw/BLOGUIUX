@@ -1,0 +1,114 @@
+---
+title: "Comment j’ai setup Jarvis sur Raspberry Pi 5"
+description: "Retour détaillé sur la mise en place de Jarvis sur un Raspberry Pi 5 : objectifs, stack, services, architecture mémoire et premiers arbitrages d’infrastructure."
+date: "2026-05-24"
+tags:
+  - raspberry-pi
+  - jarvis
+  - homelab
+  - infrastructure
+  - ai
+published: true
+---
+
+Quand j’ai lancé ce setup, mon objectif n’était pas juste de faire tourner un chatbot de plus sur un Raspberry Pi. Je voulais poser une base sérieuse pour un assistant personnel capable de durer, de stocker de la mémoire proprement, d’interagir avec plusieurs outils et de rester suffisamment modulaire pour évoluer plus tard.
+
+Le Raspberry Pi 5 s’est imposé comme une bonne machine pour ça : compact, peu énergivore, toujours allumé, et largement suffisant pour orchestrer une stack composée de plusieurs services bien séparés.
+
+## L’objectif du setup
+
+L’idée n’était pas de tout entasser dans un seul conteneur, mais de construire une architecture lisible :
+
+- une application principale Jarvis,
+- une mémoire structurée persistante,
+- une couche vectorielle pour la recherche sémantique,
+- un vault Obsidian lisible par un humain,
+- et un pipeline d’ingestion capable d’alimenter cette mémoire automatiquement.
+
+Je voulais aussi que l’ensemble reste administrable simplement depuis mon homelab, avec des dossiers propres, des mounts explicites et un accès facile aux notes via Samba.
+
+## La structure générale
+
+Très vite, la bonne séparation s’est imposée :
+
+- **le code et les stacks Docker** sous `/srv/docker/...`
+- **les données persistantes** sous `/srv/data/...`
+
+Cette séparation paraît basique, mais elle change beaucoup de choses au quotidien. Elle évite de mélanger la logique applicative avec les données runtime, simplifie les backups, et rend l’architecture beaucoup plus lisible quand on revient dessus quelques semaines plus tard.
+
+Dans mon cas, on a abouti à quelque chose de ce genre :
+
+- `/srv/docker/jarvis/core` pour le repo principal,
+- `/srv/docker/memory-worker` pour le worker mémoire,
+- `/srv/docker/qdrant` pour la stack vectorielle,
+- `/srv/data/ai/jarvis` pour l’état applicatif,
+- `/srv/data/ai/qdrant` pour les données Qdrant,
+- `/srv/data/ai/memory/obsidian-vault` pour le vault principal.
+
+## Le rôle de chaque brique
+
+Le repo principal contient beaucoup plus qu’un simple backend. On y retrouve l’orchestration des agents, les outils, la logique d’approbation, la mémoire, les workflows, le contrôle de sidecars et même l’interface du produit.
+
+Autrement dit, le Pi 5 n’héberge pas seulement “un assistant”, mais une vraie plateforme personnelle :
+
+- un noyau applicatif,
+- une UI,
+- un système d’outils,
+- une couche mémoire hybride,
+- et des services périphériques spécialisés.
+
+Cette séparation en plusieurs briques est ce qui rend le projet intéressant. Chaque composant a une responsabilité claire au lieu de devenir un monolithe opaque.
+
+## Pourquoi la mémoire est hybride
+
+Un des points les plus intéressants du setup, c’est la mémoire. Au lieu de vouloir tout stocker au même endroit, on a une architecture en plusieurs couches :
+
+- **SQLite** pour la mémoire structurée et l’état applicatif,
+- **Qdrant** pour la recherche vectorielle,
+- **un vault Obsidian** pour la mémoire lisible et éditable.
+
+Concrètement, cela veut dire qu’un même système peut :
+
+- garder des entités, faits, relations, tâches et engagements,
+- retrouver du contexte par similarité sémantique,
+- et produire une base de notes réellement consultable par un humain.
+
+C’est ce point qui, à mes yeux, fait passer Jarvis d’un simple assistant conversationnel à un vrai système de travail personnel.
+
+## Les premiers vrais arbitrages
+
+Comme souvent en homelab, les premières heures ne consistent pas à “coder une feature”, mais à remettre de l’ordre dans les chemins, les volumes et les points d’entrée.
+
+Un bon exemple : le worker mémoire pointait encore vers un ancien dossier Obsidian, alors que le vrai vault cible était ailleurs. Même problème côté partage Samba : le partage existait, mais ciblait encore l’ancien chemin.
+
+La partie intéressante n’était pas juste de corriger deux lignes de config. Le vrai travail consistait à clarifier la carte mentale du système :
+
+- quel dossier contient le code,
+- quel dossier contient les données,
+- quel vault est réellement utilisé,
+- quel service ingère quoi,
+- et quel point d’entrée exécute vraiment l’ingestion.
+
+## Ce que j’ai retenu de cette phase
+
+Le plus gros gain n’a pas été technique. Il a été architectural. Une fois les bons chemins remis en face des bons services, tout le projet devient plus compréhensible.
+
+On sait où se trouvent :
+
+- la base SQLite,
+- l’index Qdrant,
+- le vault principal,
+- le worker d’ingestion,
+- et l’accès réseau au vault.
+
+À partir de là, on peut commencer à coder ou enrichir la mémoire sans avoir l’impression de bricoler dans une cave.
+
+## La suite
+
+Dans les prochains articles, je vais détailler les couches les plus importantes de ce setup :
+
+- l’architecture mémoire de Jarvis,
+- l’organisation de l’infrastructure et des dossiers,
+- et la manière dont j’ai branché Obsidian, Qdrant et Samba pour obtenir un workflow cohérent.
+
+Le but n’est pas de faire une démo flashy. Le but est de construire un assistant personnel qui repose sur une infra simple, compréhensible et durable.

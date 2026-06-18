@@ -1,0 +1,130 @@
+---
+title: "Comprendre l’architecture mémoire de Jarvis sur Raspberry Pi 5"
+description: "Pourquoi j’ai choisi une mémoire hybride avec SQLite, Qdrant et un vault Obsidian, et ce que chaque couche apporte réellement."
+date: "2026-05-24"
+tags:
+  - memory
+  - qdrant
+  - obsidian
+  - sqlite
+  - jarvis
+published: true
+---
+
+Quand on parle de “mémoire” pour un assistant personnel, le piège classique consiste à chercher un seul stockage magique capable de tout faire. En pratique, ce n’est ni réaliste ni souhaitable. Un bon système de mémoire sépare plusieurs besoins qui n’ont pas les mêmes contraintes.
+
+Dans mon setup Jarvis sur Raspberry Pi 5, la mémoire repose sur trois couches complémentaires.
+
+## 1. La mémoire structurée : SQLite
+
+Le premier niveau, c’est la mémoire structurée. Elle vit dans `jarvis.db` et sert à stocker ce qui doit rester propre, interrogeable et cohérent dans le temps.
+
+Typiquement, c’est là qu’on s’attend à trouver :
+
+- des entités,
+- des faits,
+- des relations,
+- des engagements,
+- des tâches,
+- des profils,
+- ou encore des métadonnées de conversations.
+
+Cette couche sert de colonne vertébrale applicative. C’est elle qui donne de la structure au système.
+
+## 2. La mémoire sémantique : Qdrant
+
+Le second niveau, c’est la recherche vectorielle. Là, le rôle n’est plus d’assurer une structure parfaite, mais de retrouver rapidement ce qui “ressemble” sémantiquement à une demande donnée.
+
+Qdrant joue ce rôle :
+
+- stockage de vecteurs,
+- recherche par similarité,
+- support à la récupération de contexte,
+- meilleure pertinence sur des souvenirs ou documents proches du sujet demandé.
+
+Cette couche est particulièrement utile dès qu’on veut rappeler des passages de notes, des extraits de conversations ou des documents connexes sans dépendre uniquement de mots-clés exacts.
+
+## 3. La mémoire lisible : le vault Obsidian
+
+Le troisième niveau est souvent sous-estimé : la mémoire doit aussi rester lisible par un humain. C’est exactement le rôle du vault Obsidian.
+
+Le vault contient des dossiers comme :
+
+- `Conversations`
+- `Knowledge`
+- `Memories`
+- `Projects`
+- `Daily`
+- `Scratchpad`
+
+Cette couche est essentielle, parce qu’elle donne un format durable, éditable et portable à la mémoire. On ne dépend pas uniquement d’une base ou d’un moteur vectoriel : on conserve aussi un corpus de notes réellement exploitable au quotidien.
+
+## Pourquoi ne pas tout centraliser ?
+
+Parce que les trois besoins sont différents.
+
+- SQLite est excellent pour les objets structurés.
+- Qdrant est excellent pour la recherche sémantique.
+- Obsidian est excellent pour la lisibilité et l’édition humaine.
+
+Vouloir tout mettre dans un seul outil revient souvent à faire des compromis médiocres partout.
+
+## Le rôle du memory-worker
+
+Entre le vault et Qdrant, il faut une couche de travail. C’est là qu’intervient le `memory-worker`.
+
+Son rôle est simple sur le principe :
+
+- lire les fichiers Markdown du vault,
+- les découper en chunks,
+- calculer des hashes pour éviter les doublons,
+- générer les embeddings,
+- puis injecter le tout dans Qdrant.
+
+C’est cette brique qui transforme un simple dossier de notes en mémoire exploitable par un assistant.
+
+## Le vrai piège rencontré
+
+Le plus gros problème rencontré n’était pas Qdrant lui-même, ni même le vault. Le vrai piège venait du fait qu’un ancien chemin était encore câblé dans le worker.
+
+Autrement dit :
+
+- le bon vault existait,
+- mais le service ne lisait pas encore le bon dossier.
+
+En parallèle, le point d’entrée du conteneur lançait un script de bootstrap minimal au lieu du pipeline d’ingestion réel. Résultat : le système semblait “tourner”, mais n’indexait pas réellement le vault ciblé.
+
+Ce genre de détail est exactement la raison pour laquelle il faut documenter l’architecture dès le début.
+
+## Ce que j’ai changé
+
+Pour remettre la mémoire d’équerre, il a fallu :
+
+- pointer le worker vers `/srv/data/ai/memory/obsidian-vault`,
+- corriger le partage Samba pour exposer ce même vault,
+- puis fusionner la logique de bootstrap et d’ingestion dans un vrai point d’entrée cohérent.
+
+Une fois cela fait, le test de bout en bout a confirmé que les fichiers Markdown du vault étaient bien vus, chunkés et injectés dans Qdrant.
+
+## Ce que j’aime dans cette architecture
+
+Ce que j’apprécie le plus, c’est qu’elle reste simple à lire :
+
+- une base structurée,
+- un index vectoriel,
+- un vault humain,
+- un pipeline clair entre les trois.
+
+C’est suffisamment robuste pour un usage sérieux, sans basculer dans une complexité absurde pour un homelab.
+
+## La suite logique
+
+Une fois la mémoire proprement branchée, on peut vraiment commencer à enrichir le système :
+
+- plus de notes,
+- plus de documents,
+- meilleure extraction,
+- meilleurs liens entre mémoire structurée et mémoire documentaire,
+- et à terme une expérience beaucoup plus contextuelle.
+
+C’est à ce moment-là que Jarvis commence réellement à devenir un assistant personnel durable, et pas seulement une interface conversationnelle branchée sur un modèle.

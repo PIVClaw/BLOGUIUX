@@ -1,0 +1,19 @@
+---
+title: "Ma mise à jour multi modèles"
+date: "2026-06-14"
+description: "Nouvelle structure multi-modèles et automatisation systemd pour rendre l’assistant plus robuste."
+category: "Automation"
+tags: ["JARVIS", "systemd", "automation", "multi-modèles", "homelab"]
+---
+
+# Ma mise à jour multi modèles
+
+Je viens de faire évoluer la structure du projet vers une organisation plus modulaire, basée sur plusieurs modèles spécialisés plutôt qu’un seul bloc monolithique.
+
+L’idée est simple : chaque composant critique peut maintenant être isolé, redémarré et surveillé indépendamment. Cela rend l’ensemble plus lisible, plus facile à déboguer, et surtout plus résilient en cas de problème sur une partie du système.
+
+La grosse amélioration côté infrastructure concerne l’intégration avec systemd. Les services sont maintenant conçus pour redémarrer automatiquement en cas de crash, et reprendre leur fonctionnement après un reboot sans intervention manuelle.
+
+Concrètement, cela signifie que le système peut tourner en autonomie beaucoup plus longtemps. Si un modèle ou un service s’arrête brutalement, systemd le relance automatiquement. Si la machine redémarre, les services concernés repartent dans le bon ordre.
+
+Cette mise à jour marque donc une étape importante : on passe d’un prototype manuel à une vraie structure automatisée, plus proche d’un assistant personnel robuste tournant 24/7 sur le Raspberry Pi.
