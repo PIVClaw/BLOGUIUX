@@ -1,0 +1,22 @@
+---
+title: "Organizing code, data, and services in a homelab"
+description: "How separating code, persistent data, and service runtime paths makes an AI homelab easier to reason about and maintain."
+date: "2026-05-28"
+tags:
+  - homelab
+  - architecture
+  - storage
+published: true
+---
+
+A homelab becomes much easier to maintain when code, stateful data, and runtime services do not all live in the same mental bucket.
+
+## A more coherent structure
+
+I prefer to think in three layers:
+
+- repositories and source code,
+- persistent data and volumes,
+- running services and automation.
+
+That separation reduces confusion, improves backup logic, and makes troubleshooting faster.

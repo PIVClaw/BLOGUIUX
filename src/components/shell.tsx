@@ -3,18 +3,15 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-
-const nav = [
-  { label: "Accueil", href: "/" },
-  { label: "Articles", href: "/blog" },
-  { label: "À propos", href: "/about" },
-  { label: "Contact", href: "/contact" },
-];
+import { motion } from "framer-motion";
+import { LanguageSwitcher } from "@/components/language-switcher";
+import { getDictionary } from "@/lib/i18n";
+import { useLanguage } from "@/components/language-provider";
 
 function Logo() {
   return (
     <div className="flex items-center gap-3">
-      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/15 bg-white/5 shadow-[0_8px_30px_rgba(56,189,248,0.18)]">
+      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/15 bg-white/5 shadow-[0_8px_30px_rgba(56,189,248,0.18)] transition duration-300 group-hover:scale-105 group-hover:shadow-[0_14px_40px_rgba(56,189,248,0.3)]">
         <span className="text-lg font-semibold text-primary">N</span>
       </div>
       <div>
@@ -33,15 +30,7 @@ export function Pill({ children }: { children: ReactNode }) {
   );
 }
 
-export function Button({
-  href,
-  children,
-  variant = "primary",
-}: {
-  href: string;
-  children: ReactNode;
-  variant?: "primary" | "secondary";
-}) {
+export function Button({ href, children, variant = "primary" }: { href: string; children: ReactNode; variant?: "primary" | "secondary"; }) {
   const styles =
     variant === "primary"
       ? "bg-primary text-slate-950 hover:bg-primary-strong"
@@ -50,24 +39,16 @@ export function Button({
   return (
     <Link
       href={href}
-      className={`inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 ${styles}`}
+      className={`ripple inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 ${styles}`}
     >
-      {children}
+      <span>{children}</span>
     </Link>
   );
 }
 
-export function SectionHeading({
-  eyebrow,
-  title,
-  description,
-}: {
-  eyebrow: string;
-  title: string;
-  description?: string;
-}) {
+export function SectionHeading({ eyebrow, title, description }: { eyebrow: string; title: string; description?: string }) {
   return (
-    <div className="mb-10 max-w-2xl">
+    <div className="mb-10 max-w-2xl reveal-block">
       <Pill>{eyebrow}</Pill>
       <h2 className="mt-4 font-serif text-3xl md:text-5xl text-white text-balance">{title}</h2>
       {description ? <p className="mt-4 text-base leading-8 text-muted">{description}</p> : null}
@@ -85,45 +66,56 @@ export function Meta({ children }: { children: ReactNode }) {
 
 function Header() {
   const pathname = usePathname();
+  const { locale } = useLanguage();
+  const t = getDictionary(locale);
+  const nav = [
+    { label: t.nav.home, href: "/" },
+    { label: t.nav.blog, href: "/blog" },
+    { label: t.nav.about, href: "/about" },
+    { label: t.nav.contact, href: "/contact" },
+  ];
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/8 bg-slate-950/55 backdrop-blur-xl">
       <div className="container-shell flex h-20 items-center justify-between gap-6">
-        <Link href="/" aria-label="Retour à l'accueil">
+        <Link href="/" aria-label="Go to homepage" className="group">
           <Logo />
         </Link>
-        <nav aria-label="Navigation principale" className="hidden items-center gap-2 md:flex">
-          {nav.map((item) => {
-            const active = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`rounded-full px-4 py-2 text-sm transition ${
-                  active ? "bg-white/8 text-white" : "text-muted hover:bg-white/6 hover:text-white"
-                }`}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
+        <div className="flex items-center gap-3 md:gap-5">
+          <nav aria-label="Main navigation" className="hidden items-center gap-2 md:flex">
+            {nav.map((item) => {
+              const active = pathname === item.href;
+              return (
+                <Link key={item.href} href={item.href} className={`relative rounded-full px-4 py-2 text-sm transition ${active ? "text-white" : "text-muted hover:bg-white/6 hover:text-white"}`}>
+                  <span className="relative z-10">{item.label}</span>
+                  {active ? (
+                    <motion.span
+                      layoutId="nav-active-pill"
+                      className="absolute inset-0 rounded-full bg-white/8 ring-1 ring-primary/20"
+                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    />
+                  ) : null}
+                </Link>
+              );
+            })}
+          </nav>
+          <LanguageSwitcher />
+        </div>
       </div>
     </header>
   );
 }
 
 function Footer() {
+  const { locale } = useLanguage();
+  const t = getDictionary(locale);
+
   return (
     <footer className="mt-24 border-t border-white/8">
       <div className="container-shell flex flex-col gap-4 py-10 text-sm text-muted md:flex-row md:items-center md:justify-between">
-        <p>© {new Date().getFullYear()} BLOGUIUX — V2 UI/UX Pro Max</p>
+        <p>© {new Date().getFullYear()} BLOGUIUX — V3</p>
         <div className="flex items-center gap-3">
-          <span>Next.js 15</span>
-          <span className="text-white/20">•</span>
-          <span>Accessibilité</span>
-          <span className="text-white/20">•</span>
-          <span>Design system</span>
+          <span>{t.footer.tagline}</span>
         </div>
       </div>
     </footer>

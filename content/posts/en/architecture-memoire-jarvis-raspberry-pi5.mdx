@@ -1,0 +1,59 @@
+---
+title: "Understanding Jarvis memory architecture on Raspberry Pi 5"
+description: "Why I chose a hybrid memory stack with SQLite, Qdrant, and an Obsidian vault, and what each layer really brings."
+date: "2026-05-24"
+tags:
+  - memory
+  - qdrant
+  - obsidian
+  - sqlite
+  - jarvis
+published: true
+---
+
+When people talk about “memory” for a personal assistant, the classic trap is looking for one magical storage layer that does everything. In practice, that is neither realistic nor desirable. A solid memory system separates needs that do not share the same constraints.
+
+In my Jarvis setup on Raspberry Pi 5, memory is built on three complementary layers.
+
+## 1. Structured memory: SQLite
+
+The first layer is structured memory. It lives in `jarvis.db` and stores what must remain clean, queryable, and coherent over time.
+
+Typically, this is where you expect to keep:
+
+- entities,
+- facts,
+- relationships,
+- commitments,
+- tasks,
+- profiles,
+- and conversation metadata.
+
+This layer acts as the application backbone.
+
+## 2. Semantic memory: Qdrant
+
+The second layer is vector retrieval. Its role is not perfect structure, but fast access to information that is semantically close to a given request.
+
+Qdrant handles:
+
+- vector storage,
+- similarity search,
+- context retrieval,
+- and better relevance for notes, memories, and related documents.
+
+## 3. Human-readable memory: the Obsidian vault
+
+The third layer is often underestimated: memory should also remain readable by a human. That is exactly what the Obsidian vault provides.
+
+It contains folders such as `Conversations`, `Knowledge`, `Memories`, `Projects`, `Daily`, and `Scratchpad`.
+
+## Why not centralize everything?
+
+Because the three needs are different.
+
+- SQLite is excellent for structured objects.
+- Qdrant is excellent for semantic retrieval.
+- Obsidian is excellent for readability and human editing.
+
+Trying to put everything into one tool usually means making mediocre compromises everywhere.

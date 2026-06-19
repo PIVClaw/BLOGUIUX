@@ -1,0 +1,107 @@
+{
+  "site": {
+    "title": "Naj's tech adventures",
+    "description": "A bilingual premium and immersive tech blog about architecture, automation, systems, and practical experiments."
+  },
+  "nav": {
+    "home": "Home",
+    "blog": "Articles",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "common": {
+    "readArticle": "Read article",
+    "viewAllArticles": "View all articles",
+    "backToArticles": "Back to articles",
+    "noArticles": "No articles available for this filter.",
+    "activeFilter": "Active filter",
+    "readingTime": "Reading time",
+    "publishedOn": "Published on",
+    "switchLanguage": "Switch language",
+    "premiumExperience": "Premium editorial experience",
+    "discover": "Discover",
+    "email": "Email"
+  },
+  "hero": {
+    "eyebrow": "BLOGUIUX V3",
+    "title": "A bilingual blog that feels more alive, more immersive, and more memorable.",
+    "subtitle": "A FR/EN editorial experience with advanced motion, polished micro-interactions, and an interface designed to elevate every idea.",
+    "ctaPrimary": "Explore articles",
+    "ctaSecondary": "See the approach"
+  },
+  "home": {
+    "featuredEyebrow": "Featured article",
+    "featuredTitle": "Key content finally becomes a true reading experience",
+    "featuredDescription": "The featured block gains presence with a more narrative, dynamic, and clearer presentation.",
+    "latestEyebrow": "Latest content",
+    "latestTitle": "An animated article grid that feels more engaging",
+    "latestDescription": "Cards breathe better, react on hover, and naturally guide readers toward the next click.",
+    "improvementsEyebrow": "What improved",
+    "improvementsTitle": "What V3 brings in practical terms",
+    "improvements": [
+      {
+        "title": "Full internationalization",
+        "desc": "FR/EN interface, automatic language detection, and locally persisted preference."
+      },
+      {
+        "title": "Editorial-grade motion",
+        "desc": "Hero parallax, scroll reveals, page transitions, and staggered entrances that create rhythm."
+      },
+      {
+        "title": "Premium micro-interactions",
+        "desc": "Button ripple effects, elevated card hover states, image zoom, and animated nav indicator."
+      },
+      {
+        "title": "More credible reading flow",
+        "desc": "Stronger hierarchy, clearer labels, and more coherent components throughout."
+      }
+    ],
+    "metrics": {
+      "eyebrow": "Why this works better",
+      "items": [
+        "Stronger hierarchy with a real visual entry point",
+        "Primary and secondary CTAs are better prioritized",
+        "More breathing room through spacing and motion",
+        "A memorable interface without hurting readability"
+      ]
+    },
+    "pillars": [
+      {
+        "title": "Native bilingual setup",
+        "desc": "A coherent FR/EN foundation from interface copy to article content."
+      },
+      {
+        "title": "Purposeful motion design",
+        "desc": "Subtle animation that supports storytelling instead of distracting from it."
+      },
+      {
+        "title": "Details that matter",
+        "desc": "Small moments of feedback make the product feel clearer, sharper, and more premium."
+      }
+    ]
+  },
+  "blog": {
+    "eyebrow": "Library",
+    "title": "All articles",
+    "description": "A bilingual collection designed to make exploration smoother and more enjoyable.",
+    "readMore": "Read more"
+  },
+  "about": {
+    "eyebrow": "About BLOGUIUX V3",
+    "title": "Why this version goes further",
+    "description": "This redesign goes beyond a visual facelift: it structures attention better, makes reading more immersive, and opens the door to a truly international experience.",
+    "body1": "V2 already provided a solid base. V3 adds a smarter interface layer: bilingual content, persisted language preference, reactive components, and transitions that give the blog more presence.",
+    "body2": "The goal is not to pile on effects for style alone. It is to increase perceived quality, help readers orient themselves faster, and make the reading journey more engaging without compromising performance or accessibility."
+  },
+  "contact": {
+    "eyebrow": "Let's talk",
+    "title": "Contact",
+    "description": "Reach out if you want to talk about tech, product, automation, or collaboration.",
+    "cardTitle": "Want to connect?",
+    "cardBody": "I'm always open to discussing an ambitious project, a technical topic, or a thoughtful product improvement.",
+    "cta": "Send an email"
+  },
+  "footer": {
+    "tagline": "Bilingual • Motion • Micro-interactions • Next.js 15"
+  }
+}

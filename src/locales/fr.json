@@ -1,0 +1,107 @@
+{
+  "site": {
+    "title": "Les aventures tech de Naj",
+    "description": "Un blog tech bilingue, premium et immersif sur l'architecture, l'automatisation, les systèmes et les expériences concrètes."
+  },
+  "nav": {
+    "home": "Accueil",
+    "blog": "Articles",
+    "about": "À propos",
+    "contact": "Contact"
+  },
+  "common": {
+    "readArticle": "Lire l’article",
+    "viewAllArticles": "Voir tous les articles",
+    "backToArticles": "Retour aux articles",
+    "noArticles": "Aucun article disponible pour ce filtre.",
+    "activeFilter": "Filtre actif",
+    "readingTime": "Temps de lecture",
+    "publishedOn": "Publié le",
+    "switchLanguage": "Changer de langue",
+    "premiumExperience": "Expérience éditoriale premium",
+    "discover": "Découvrir",
+    "email": "Email"
+  },
+  "hero": {
+    "eyebrow": "BLOGUIUX V3",
+    "title": "Un blog bilingue plus vivant, plus immersif, plus mémorable.",
+    "subtitle": "Une expérience éditoriale FR/EN avec animations avancées, micro-interactions soignées et interface pensée pour valoriser chaque idée.",
+    "ctaPrimary": "Explorer les articles",
+    "ctaSecondary": "Comprendre l’approche"
+  },
+  "home": {
+    "featuredEyebrow": "Article mis en avant",
+    "featuredTitle": "Le contenu clé devient une vraie expérience de lecture",
+    "featuredDescription": "Le bloc featured gagne en présence grâce à une mise en scène plus narrative, plus dynamique et plus claire.",
+    "latestEyebrow": "Derniers contenus",
+    "latestTitle": "Une grille d’articles animée et plus engageante",
+    "latestDescription": "Les cartes respirent mieux, réagissent au survol et guident naturellement vers la lecture.",
+    "improvementsEyebrow": "Axes d’amélioration",
+    "improvementsTitle": "Ce que la V3 apporte concrètement",
+    "improvements": [
+      {
+        "title": "Internationalisation complète",
+        "desc": "Interface FR/EN, détection automatique de langue et préférence persistée localement."
+      },
+      {
+        "title": "Animations éditoriales",
+        "desc": "Parallaxe hero, reveals au scroll, transitions de page et entrées décalées pour donner du rythme."
+      },
+      {
+        "title": "Micro-interactions premium",
+        "desc": "Ripple sur boutons, hover élévation, zoom image et indicateur de navigation animé."
+      },
+      {
+        "title": "Lecture plus crédible",
+        "desc": "Hiérarchie visuelle renforcée, labels plus clairs et composants plus cohérents."
+      }
+    ],
+    "metrics": {
+      "eyebrow": "Pourquoi ça fonctionne mieux",
+      "items": [
+        "Hiérarchie plus forte avec vrai point d’entrée visuel",
+        "CTA primaires et secondaires mieux hiérarchisés",
+        "Respiration visuelle accrue grâce aux animations et espacements",
+        "Interface mémorable sans sacrifier la lisibilité"
+      ]
+    },
+    "pillars": [
+      {
+        "title": "Bilingue natif",
+        "desc": "Une base FR/EN cohérente, pensée dès l’interface jusqu’aux contenus."
+      },
+      {
+        "title": "Motion design utile",
+        "desc": "Des animations subtiles qui soutiennent la narration au lieu de distraire."
+      },
+      {
+        "title": "Détails qui comptent",
+        "desc": "Les petits feedbacks rendent l’expérience plus moderne, plus premium et plus claire."
+      }
+    ]
+  },
+  "blog": {
+    "eyebrow": "Bibliothèque",
+    "title": "Tous les articles",
+    "description": "Une collection bilingue conçue pour rendre l’exploration plus fluide et plus agréable.",
+    "readMore": "Lire la suite"
+  },
+  "about": {
+    "eyebrow": "À propos de BLOGUIUX V3",
+    "title": "Pourquoi cette version va plus loin",
+    "description": "Cette refonte pousse le produit au-delà du simple relooking visuel : elle structure mieux l’attention, rend la lecture plus immersive et ouvre une vraie dimension internationale.",
+    "body1": "La V2 apportait déjà une base propre. La V3 ajoute une couche d’intelligence d’interface : contenus bilingues, préférence de langue persistée, composants réactifs et transitions qui donnent plus de présence au blog.",
+    "body2": "L’objectif n’est pas d’ajouter des effets pour faire joli. Il s’agit de renforcer la perception de qualité, d’aider l’utilisateur à se repérer plus vite et de rendre le parcours de lecture plus engageant sans nuire aux performances ni à l’accessibilité."
+  },
+  "contact": {
+    "eyebrow": "Parlons-en",
+    "title": "Contact",
+    "description": "Tu peux me contacter pour parler tech, produit, automatisation ou collaboration.",
+    "cardTitle": "Envie d’échanger ?",
+    "cardBody": "Je suis toujours partant pour discuter d’un projet ambitieux, d’un sujet technique ou d’une amélioration produit bien pensée.",
+    "cta": "Envoyer un email"
+  },
+  "footer": {
+    "tagline": "Bilingue • Motion • Micro-interactions • Next.js 15"
+  }
+}

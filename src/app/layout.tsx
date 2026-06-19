@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
+import { LanguageProvider } from "@/components/language-provider";
 
 const heading = Playfair_Display({
   variable: "--font-heading",
@@ -15,14 +16,16 @@ const body = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Les aventures tech de Naj",
+  title: "Naj Tech Journal",
   description: "A premium bilingual tech blog built with Next.js.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="fr" className={`${heading.variable} ${body.variable}`}>
-      <body>{children}</body>
+      <body>
+        <LanguageProvider>{children}</LanguageProvider>
+      </body>
     </html>
   );
 }

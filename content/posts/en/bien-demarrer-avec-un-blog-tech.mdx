@@ -1,0 +1,34 @@
+---
+title: "How I set up Jarvis on Raspberry Pi 5"
+description: "A detailed look at setting up Jarvis on a Raspberry Pi 5: goals, stack, services, memory architecture, and early infrastructure trade-offs."
+date: "2026-05-24"
+tags:
+  - raspberry-pi
+  - homelab
+  - architecture
+  - jarvis
+published: true
+---
+
+Setting up Jarvis on a Raspberry Pi 5 was not just about getting a model online. The real objective was to build a personal assistant system that could remain coherent, extensible, and useful over time.
+
+## What mattered from the start
+
+I wanted a setup that could:
+
+- run reliably in a homelab environment,
+- keep structured and semantic memory separate,
+- stay readable from the outside,
+- and evolve without becoming fragile.
+
+## Core stack
+
+The setup quickly converged around a few key choices:
+
+- Raspberry Pi 5 as the host,
+- containerized services,
+- SQLite for structured memory,
+- Qdrant for vector search,
+- Obsidian as the human-facing vault.
+
+The result is simple enough to understand, but strong enough to support real experimentation.

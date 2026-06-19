@@ -1,0 +1,25 @@
+---
+title: "Making Obsidian, Qdrant, and Samba work coherently"
+description: "A practical look at aligning human-readable notes, semantic search, and file sharing without creating hidden inconsistencies."
+date: "2026-05-27"
+tags:
+  - obsidian
+  - qdrant
+  - samba
+  - workflow
+published: true
+---
+
+One of the easiest ways to create chaos in a personal knowledge system is to let multiple tools point to slightly different paths, copies, or assumptions.
+
+## The real challenge
+
+The challenge was not just storing notes. It was making sure:
+
+- the vault exposed through Samba,
+- the files indexed into Qdrant,
+- and the notes edited in Obsidian
+
+were all referring to the same source of truth.
+
+That sounds obvious, but small path mismatches can silently break the whole pipeline.
